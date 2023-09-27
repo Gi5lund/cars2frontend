@@ -9,9 +9,6 @@ const URL = `${API_URL}/cars`
 export async function initFindEditCar(match){
     //empty field 
     document.getElementById("car-id-input").value=""
-    
-   
-   
     document.getElementById("btn-fetch-car").onclick=getCar
     document.getElementById("btn-submit-edited-car").onclick=editCar
     document.getElementById("btn-delete-car").onclick=deleteCar
@@ -21,25 +18,12 @@ export async function initFindEditCar(match){
    async function getCar(){
    const id = document.getElementById("car-id-input").value
     try{
-    const car=await fetch(URL+"/"+id).then(handleHttpErrors)
-    
-       
-    
-  
+    const car=await fetch(URL+"/"+id).then(handleHttpErrors) 
     document.getElementById("car-id").value=car.id
-    
-  
     document.getElementById("brand").value=car.brand
-    
-  
     document.getElementById("model").value=car.model
-    
-  
     document.getElementById("price-pr-day").value=car.pricePrDay
-    
-  
     document.getElementById("best-discount").value=car.bestDiscount
-   
    }catch(err){
        console.log(err)
    }}
@@ -58,22 +42,8 @@ export async function initFindEditCar(match){
    fetchOptions.body = JSON.stringify(editRequest)
     try{
     const car=await fetch(URL+"/"+id,fetchOptions)    
-    .then(handleHttpErrors)
-    
-    /* // @ts-ignore
-    document.getElementById("car-id").value=car.id
-    
+    .then(handleHttpErrors)    
   
-    document.getElementById("brand").value=car.brand
-    
-  
-    document.getElementById("model").value=car.model
-    
-  
-    document.getElementById("price-pr-day").value=car.pricePrDay
-    
-  
-    document.getElementById("best-discount").value=car.bestDiscount */
 }catch(err){
         console.log(err)
    }}
