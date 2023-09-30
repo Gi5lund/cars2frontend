@@ -1,5 +1,5 @@
 import { API_URL} from "../../settings.js"
-import { handleHttpErrors } from "../../utils.js"
+import { handleHttpErrors,makeOptions } from "../../utils.js"
 import { sanitizeStringWithTableRows } from "../../utils.js"
 const URL = API_URL + "/cars"
 
@@ -7,20 +7,18 @@ const URL = API_URL + "/cars"
 let carIdInput
 let carUsernameInput
 let carReservationDate
-let cars;
+let cars=[];
 export async function initReservation() {
-
 
   //Initialize nodes used more than once
   carIdInput = document.getElementById("car-id")
   carUsernameInput = document.getElementById("user-name")
   carReservationDate = document.getElementById("reservation-date")
 
-
   try {
     //Store cars, so we later can get the selected one to reserve
-    cars = await fetch(URL).then(handleHttpErrors)
-    document.getElementById("table-rows").onclick = setupReservationModal
+    cars = await fetch(URL,makeOptions("GET",null,true)).then(handleHttpErrors)
+    document.getElementById("table-rows").addEventListener("click",setupReservationModal)
     const carRows = cars.map(car => `
   <tr>
   <td>${car.id}</td>
@@ -32,7 +30,6 @@ export async function initReservation() {
   </button> </td>      
   </tr>
   `).join("\n")
-
 
     const safeRows = sanitizeStringWithTableRows(carRows);
     document.getElementById("table-rows").innerHTML = safeRows
@@ -46,15 +43,15 @@ export async function initReservation() {
   }
 }
 
-
 async function setupReservationModal(evt) {
   const btn = evt.target
-  if (!btn.id.includes("_car-id")) {
-    return //Not a reserve button that was clicked
+  if (!btn.id.includes("_car-id")) { //hvis det ikke er en knap der er trykket på 
+    return //så returner ingenting
   }
+//const username=localStorage.getItem(user.value)?
   const id = btn.id.split("_")[0]
   const carToRent = cars.find(car => car.id == id)
-  const headerText = `Reserve car: (${carToRent.id}), ${carToRent.brand}, ${carToRent.model}, price: ${carToRent.pricePrDay}`
+  const headerText = `Welcome ${localStorage.getItem("user")} You chose the car: (${carToRent.id}), ${carToRent.brand}, ${carToRent.model}, price: ${carToRent.pricePrDay}`
   document.getElementById("reservation-modal-label").innerText = headerText
  
   carIdInput.value = id
@@ -64,18 +61,18 @@ async function setupReservationModal(evt) {
   document.getElementById("btn-reservation").onclick = reserveCar
 }
 
-
 async function reserveCar() {
-  const URL = API_URL + "/reservations"
+  const URL = API_URL + "/reservations/v2"
+  
   const reservationRequest = {
     carId : carIdInput.value,
-    userName : carUsernameInput.value,
+   // userName : carUsernameInput.value,
     date : carReservationDate.value
   }
-  const fetchOptions = {}
-  fetchOptions.method = "POST"
+  const fetchOptions = makeOptions("POST",reservationRequest,true)
+  /* fetchOptions.method = "POST"
   fetchOptions.headers = { "Content-Type": "application/json" }
-  fetchOptions.body = JSON.stringify(reservationRequest)
+  fetchOptions.body = JSON.stringify(reservationRequest) */
   try {
     await fetch(URL, fetchOptions).then(handleHttpErrors)
     setStatusMsg("Car was successfully reserved, enter a new date, or press close", false)
