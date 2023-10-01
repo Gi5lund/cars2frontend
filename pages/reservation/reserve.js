@@ -3,7 +3,7 @@ import { handleHttpErrors,makeOptions } from "../../utils.js"
 import { sanitizeStringWithTableRows } from "../../utils.js"
 const URL = API_URL + "/cars"
 
-
+let reservationRequest={}
 let carIdInput
 let carUsernameInput
 let carReservationDate
@@ -62,22 +62,18 @@ async function setupReservationModal(evt) {
 }
 
 async function reserveCar() {
-  const URL = API_URL + "/reservations/v2"
-  
-  const reservationRequest = {
+  const URL = API_URL + "/reservations/v2"  
+  reservationRequest = {
     carId : carIdInput.value,
-   // userName : carUsernameInput.value,
+   username: carUsernameInput.value,
     date : carReservationDate.value
   }
+ 
   const fetchOptions = makeOptions("POST",reservationRequest,true)
-  /* fetchOptions.method = "POST"
-  fetchOptions.headers = { "Content-Type": "application/json" }
-  fetchOptions.body = JSON.stringify(reservationRequest) */
+
   try {
     await fetch(URL, fetchOptions).then(handleHttpErrors)
     setStatusMsg("Car was successfully reserved, enter a new date, or press close", false)
-
-
   } catch (ex) {
     const errorMsg = ex.apiError ? ex.apiError.message : ex.message
     setStatusMsg(errorMsg, true)
