@@ -1,6 +1,6 @@
 
 import { API_URL } from '../../settings.js'
-import { handleHttpErrors } from '../../utils.js'
+import { handleHttpErrors,makeOptions } from '../../utils.js'
 
 
 export function initLogin() {
@@ -17,11 +17,7 @@ async function login() {
       username: userNameInput.value,
       password: passwordInput.value
     }
-    const options = {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(loginRequest)
-    }
+    const options = makeOptions("POST", loginRequest,false)
     try {
       const res = await fetch(API_URL + "/auth/login", options).then(r => handleHttpErrors(r))
       storeLoginDetails(res)
