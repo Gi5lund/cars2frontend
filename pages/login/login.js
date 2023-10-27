@@ -50,7 +50,7 @@ async function login() {
     //Hide or show all menu-links depending on login status
     document.getElementById("login-container").style.display = loggedIn ? "none" : "block"
     document.getElementById("logout-container").style.display = loggedIn ? "block" : "none"
-    
+    document.getElementById("signup-container").style.display = loggedIn ? "block" : "none"
     const adminListItems = document.querySelectorAll('.admin-only'); // .betyder class #betyder id
     const userRoutes = document.querySelector('.user-only');
     let isAdmin = false;

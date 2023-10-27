@@ -41,7 +41,7 @@ document.getElementById("btn-submit-user").addEventListener("click",getData)
     console.log(JSON.stringify(memberrequest))
   
     try {
-       const member= await fetch(API_URL+"/user-with-role",makeOptions("POST",memberrequest,false)).then(m=>handleHttpErrors(m))
+       const member= await fetch(API_URL+"/members",makeOptions("POST",memberrequest,false)).then(m=>handleHttpErrors(m))
        addRole(member)
           }catch (err){
               console.log(err);
